@@ -56,3 +56,8 @@ yarn-error.log*
 # Misc
 *.pem
 .turbo
+
+/src/generated/prisma
+
+.vercel
+.env*.local

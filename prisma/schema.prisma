@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model FavoriteCity {
+  id        String   @id @default(cuid())
+  cityName  String   @map("city_name")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, cityName])
+  @@index([userId])
+  @@map("favorite_cities")
+}
+
+model SearchHistory {
+  id         String   @id @default(cuid())
+  searchTerm String   @map("search_term")
+  userId     String   @map("user_id")
+  timestamp  DateTime @default(now())
+
+  @@index([userId])
+  @@index([timestamp])
+  @@map("search_history")
+}
