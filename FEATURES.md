@@ -19,17 +19,17 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### Weather Details Page (`/weather/[city]`)
 
-- [ ] Wind speed display (km/h)
-- [ ] Humidity display (%)
-- [ ] UV index display with severity label
-- [ ] Feels-like temperature display
-- [ ] Visibility display (km)
-- [ ] Atmospheric pressure display (mb)
-- [ ] Sunrise/sunset in city's local timezone
-- [ ] Sunrise/sunset converted to user's browser timezone
-- [ ] Weather-based recommendation badges
+- [x] Wind speed display (km/h)
+- [x] Humidity display (%)
+- [x] UV index display with severity label
+- [x] Feels-like temperature display
+- [x] Visibility display (km)
+- [x] Atmospheric pressure display (mb)
+- [x] Sunrise/sunset in city's local timezone
+- [x] Sunrise/sunset converted to user's browser timezone
+- [x] Weather-based recommendation badges
 - [ ] Add/remove favorite toggle button (heart icon)
-- [ ] 3-day forecast section (detailed)
+- [x] 3-day forecast section (detailed)
 
 ### Favorites Page (`/favorites`)
 
@@ -116,22 +116,22 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### Weather Recommendations (`src/lib/recommendations.ts`)
 
-- [ ] Rain/drizzle/snow → "Take an umbrella"
-- [ ] Extreme heat (> 35 °C) → "Stay hydrated and seek shade"
-- [ ] Cold (< 10 °C) → "Wear a warm jacket"
-- [ ] Sunny/hot (> 25 °C) → "Wear sunglasses and sunscreen"
-- [ ] High UV (> 6) → "Wear sun protection"
-- [ ] Strong wind (> 40 km/h) → "It's quite windy"
-- [ ] Fog/mist → "Low visibility, drive carefully"
-- [ ] Mild fallback (10–25 °C) → "Great weather for outdoor activities"
-- [ ] Multiple simultaneous recommendations supported
+- [x] Rain/drizzle/snow → "Take an umbrella"
+- [x] Extreme heat (> 35 °C) → "Stay hydrated and seek shade"
+- [x] Cold (< 10 °C) → "Wear a warm jacket"
+- [x] Sunny/hot (> 25 °C) → "Wear sunglasses and sunscreen"
+- [x] High UV (> 6) → "Wear sun protection"
+- [x] Strong wind (> 40 km/h) → "It's quite windy"
+- [x] Fog/mist → "Low visibility, drive carefully"
+- [x] Mild fallback (10–25 °C) → "Great weather for outdoor activities"
+- [x] Multiple simultaneous recommendations supported
 
 ### Timezone Conversion (`src/lib/timezone.ts`)
 
-- [ ] Parse WeatherAPI sunrise/sunset strings
-- [ ] Display in city's local timezone
-- [ ] Convert and display in user's browser timezone
-- [ ] Format: "6:45 AM BST (11:45 AM your time)"
+- [x] Parse WeatherAPI sunrise/sunset strings
+- [x] Display in city's local timezone
+- [x] Convert and display in user's browser timezone
+- [x] Format: "6:45 AM BST (11:45 AM your time)"
 
 ### Caching (`src/lib/cache.ts`)
 

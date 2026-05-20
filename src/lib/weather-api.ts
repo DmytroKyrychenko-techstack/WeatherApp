@@ -33,7 +33,7 @@ export async function searchCities(query: string): Promise<SearchResult[]> {
   const url = `${WEATHER_API_BASE_URL}/search.json?key=${getApiKey()}&q=${encodeURIComponent(query)}`;
 
   const response = await fetch(url, {
-    next: { revalidate: 120 },
+    next: { revalidate: CACHE_TTL_S * 6 }, // 1 Hour
   });
 
   if (!response.ok) {

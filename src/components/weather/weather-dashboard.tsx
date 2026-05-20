@@ -41,7 +41,7 @@ export function WeatherDashboard() {
 
       <section className={styles.weatherSection}>
         {isLoading && <CurrentWeatherSkeleton />}
-        {forecast && <CurrentWeatherCard data={forecast} />}
+        {forecast && <CurrentWeatherCard data={forecast} isGeoLocation={!!coordsQuery} />}
         {showGeoPrompt && (
           <GeoPrompt
             status={geoStatus as "idle" | "denied" | "unavailable"}
