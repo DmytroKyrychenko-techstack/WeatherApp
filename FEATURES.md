@@ -8,14 +8,14 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### Home Page (`/`)
 
-- [ ] City search input with debounced autocomplete (300 ms)
-- [ ] Autocomplete dropdown showing matching cities from WeatherAPI `/search.json`
-- [ ] Display current weather card (temperature, condition, icon, city name, region)
-- [ ] Display 3-day forecast grid (date, high/low temp, condition icon, description)
-- [ ] "View Details" navigation link to `/weather/[city]`
-- [ ] Browser geolocation detection on initial page load
-- [ ] Auto-fetch weather for detected coordinates if geolocation granted
-- [ ] Graceful fallback if geolocation denied or unavailable
+- [x] City search input with debounced autocomplete (300 ms)
+- [x] Autocomplete dropdown showing matching cities from WeatherAPI `/search.json`
+- [x] Display current weather card (temperature, condition, icon, city name, region)
+- [x] Display 3-day forecast grid (date, high/low temp, condition icon, description)
+- [x] "View Details" navigation link to `/weather/[city]`
+- [x] Browser geolocation detection on initial page load
+- [x] Auto-fetch weather for detected coordinates if geolocation granted
+- [x] Graceful fallback if geolocation denied or unavailable
 
 ### Weather Details Page (`/weather/[city]`)
 
@@ -43,20 +43,19 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ## Frontend — UI/UX
 
-- [ ] Responsive design: mobile (320px+), tablet, desktop (2560px)
-- [ ] Loading skeleton components matching content shape on all pages
+- [x] Responsive design: mobile (320px+), tablet, desktop (2560px)
+- [x] Loading skeleton components matching content shape on all pages
 - [ ] Error boundary components on each page route
-- [ ] Toast notifications for action success/failure (sonner)
-- [ ] Keyboard-accessible interactive elements
+- [x] Toast notifications for action success/failure (sonner)
+- [x] Keyboard-accessible interactive elements
 - [ ] Semantic HTML with ARIA labels where needed
-- [ ] SEO metadata via `generateMetadata` on each page
+- [x] SEO metadata via `generateMetadata` on each page
 
 ---
 
 ## Frontend — State Management (Zustand)
 
 - [ ] `favorites-store.ts` — favorites list with `persist` middleware (localStorage)
-- [ ] `weather-store.ts` — current search term, selected city
 - [ ] Optimistic UI updates for favorite add/remove
 - [ ] Rollback on API failure with error toast
 
@@ -64,9 +63,9 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ## Frontend — Custom Hooks
 
-- [ ] `use-geolocation.ts` — browser Geolocation API wrapper
-- [ ] `use-weather.ts` — TanStack Query wrappers (staleTime: 10 min)
-- [ ] `use-debounce.ts` — debounce utility (300 ms)
+- [x] `use-geolocation.ts` — browser Geolocation API wrapper
+- [x] `use-weather.ts` — TanStack Query wrappers (cache config in `providers.tsx`)
+- [x] `use-debounce.ts` — debounce utility (300 ms)
 - [ ] `use-favorites.ts` — CRUD operations syncing Zustand + API
 
 ---
@@ -75,15 +74,15 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### Weather
 
-- [ ] `GET /api/weather/forecast?q={city}&days=3` — current weather + forecast + astronomy
-- [ ] Zod input validation on query params
-- [ ] Server-side SWR cache integration (10-min TTL)
-- [ ] Error handling with appropriate HTTP status codes
+- [x] `GET /api/weather/forecast?q={city}&days=3` — current weather + forecast + astronomy
+- [x] Zod input validation on query params
+- [x] Server-side SWR cache integration (10-min TTL)
+- [x] Error handling with appropriate HTTP status codes
 
 ### Search
 
-- [ ] `GET /api/search?q={term}` — city autocomplete
-- [ ] Zod input validation
+- [x] `GET /api/search?q={term}` — city autocomplete
+- [x] Zod input validation
 
 ### Favorites
 
@@ -109,7 +108,7 @@ Comprehensive checklist of all features to be implemented. Organized by category
 - [ ] `search_history` table with `id`, `search_term`, `user_id`, `timestamp`
 - [ ] Indexes on `user_id` and `timestamp`
 - [ ] Prisma migration files generated and committed
-- [ ] Prisma client singleton (`src/lib/db.ts`)
+- [x] Prisma client singleton (`src/lib/db.ts`)
 
 ---
 
@@ -136,11 +135,11 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### Caching (`src/lib/cache.ts`)
 
-- [ ] In-memory `Map` with 10-minute TTL per key
-- [ ] Stale-while-revalidate pattern (return stale, refresh in background)
-- [ ] `isRefreshing` deduplication flag
+- [x] In-memory `Map` with 10-minute TTL per key
+- [x] Stale-while-revalidate pattern (return stale, refresh in background)
+- [x] `isRefreshing` deduplication flag
 - [ ] Cache key format: `weather:forecast:{normalizedCity}`
-- [ ] Client-side TanStack Query cache (staleTime: 10 min, gcTime: 30 min)
+- [x] Client-side TanStack Query cache (staleTime: 10 min, gcTime: 30 min)
 
 ---
 
@@ -156,16 +155,16 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### WeatherAPI.com (`src/lib/weather-api.ts`)
 
-- [ ] `getForecast(query, days)` — current + forecast + astronomy
-- [ ] `searchCities(query)` — autocomplete
-- [ ] API key kept server-side only (never exposed to client)
-- [ ] Error handling for API failures
+- [x] `getForecast(query, days)` — current + forecast + astronomy
+- [x] `searchCities(query)` — autocomplete
+- [x] API key kept server-side only (never exposed to client)
+- [x] Error handling for API failures
 
 ### Browser Geolocation API
 
-- [ ] Request permission on Home page load
-- [ ] Extract lat/lon coordinates
-- [ ] Pass coordinates to weather API as query
+- [x] Request permission on Home page load
+- [x] Extract lat/lon coordinates
+- [x] Pass coordinates to weather API as query
 
 ---
 

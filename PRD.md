@@ -21,7 +21,7 @@ Build a production-ready, full-stack Weather App that enables users to search fo
 | Framework          | **Next.js** (App Router)            | Full-stack React framework with SSR, API routes, and file-based routing    |
 | Language           | **TypeScript**                      | Type safety across the entire codebase                                     |
 | Styling            | **Tailwind CSS** + **shadcn/ui**    | Utility-first CSS with accessible, composable UI primitives                |
-| State Management   | **Zustand**                         | Lightweight (2 KB), hook-based, SSR-compatible, `persist` middleware       |
+| State Management   | **Zustand**                         | Used for favorites with `persist` middleware; search/city selection handled via URL routing |
 | Server State       | **TanStack Query**                  | Caching, background refetch, and stale-while-revalidate for API data       |
 | ORM                | **Prisma**                          | Type-safe database access, declarative schema, migration file generation   |
 | Database           | **PostgreSQL 18** (Docker)          | Robust relational database for favorites and search history                |
@@ -172,7 +172,7 @@ Multiple recommendations can apply simultaneously.
   - Pattern: **stale-while-revalidate** -- return stale data immediately, refresh in background
   - Deduplication: `isRefreshing` flag prevents concurrent background fetches for same key
   - Cache key format: `weather:forecast:{normalizedCity}`
-- **Client-side**: TanStack Query with `staleTime: 600_000` (10 min) and `gcTime: 1_800_000` (30 min)
+- **Client-side**: TanStack Query with `staleTime: QUERY_STALE_MS` (10 min) and `gcTime: QUERY_GC_TIME_MS` (30 min), configured globally in `providers.tsx`
 
 ### 3.5 Multi-User Support
 
