@@ -1,7 +1,5 @@
 import { z } from "zod/v4";
 import { getForecast } from "@/lib/weather-api";
-import { getWithSWR } from "@/lib/cache";
-import { CACHE_TTL_MS } from "@/lib/constants";
 
 const querySchema = z.object({
   q: z.string().min(1, "Query parameter 'q' is required"),
@@ -25,11 +23,7 @@ export async function GET(request: Request) {
   const { q, days } = parsed.data;
 
   try {
-    const data = await getWithSWR(
-      `forecast:${q.toLowerCase()}:${days}`,
-      () => getForecast(q, days),
-      CACHE_TTL_MS
-    );
+    const data = await getForecast(q, days);
     return Response.json(data);
   } catch (error) {
     const message =

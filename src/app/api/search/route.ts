@@ -1,7 +1,5 @@
 import { z } from "zod/v4";
 import { searchCities } from "@/lib/weather-api";
-import { getWithSWR } from "@/lib/cache";
-import { CACHE_TTL_MS } from "@/lib/constants";
 
 const querySchema = z.object({
   q: z.string().min(1, "Query parameter 'q' is required"),
@@ -23,11 +21,7 @@ export async function GET(request: Request) {
   const { q } = parsed.data;
 
   try {
-    const data = await getWithSWR(
-      `search:${q.toLowerCase()}`,
-      () => searchCities(q),
-      CACHE_TTL_MS
-    );
+    const data = await searchCities(q);
     return Response.json(data);
   } catch (error) {
     const message =

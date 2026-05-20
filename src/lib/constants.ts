@@ -1,12 +1,13 @@
 // WeatherAPI.com
 export const WEATHER_API_BASE_URL = "https://api.weatherapi.com/v1";
 
-// Server-side SWR cache TTL
-export const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+// Server-side cache TTL
+export const CACHE_TTL_S = 10 * 60;          // 10 minutes in seconds
+export const CACHE_TTL_MS = CACHE_TTL_S * 1000; // 10 minutes in milliseconds
 
 // Client-side TanStack Query cache
-export const QUERY_STALE_MS = 10 * 60 * 1000; // 10 minutes
-export const QUERY_GC_TIME_MS = 30 * 60 * 1000; // 30 minutes
+export const QUERY_STALE_MS = 5 * 60 * 1000; // 5 minutes in milliseconds
+export const QUERY_GC_TIME_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
 
 
 // Search debounce (ms)
