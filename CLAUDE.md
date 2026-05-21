@@ -9,7 +9,7 @@ This is a full-stack weather application built with Next.js 16, TypeScript, Tail
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript 5.9
 - **Styling:** Tailwind CSS 4 + shadcn/ui
-- **State Management:** Zustand (client state) + TanStack Query (server state)
+- **State Management:** TanStack Query (server state) + React useState (local UI state)
 - **ORM:** Prisma 7 with PostgreSQL 18 (Docker)
 - **Weather Data:** WeatherAPI.com
 - **Testing:** Vitest + React Testing Library
@@ -32,16 +32,15 @@ pnpm db:studio    # Open Prisma Studio
 - `src/components/` — React components (ui/, layout/, weather/, favorites/)
 - `src/lib/` — Core utilities (db, cache, weather-api, recommendations, timezone)
 - `src/hooks/` — Custom React hooks
-- `src/stores/` — Zustand stores
 - `src/types/` — TypeScript type definitions
 - `prisma/` — Database schema and migrations
 
 ## Key Design Decisions
 
-- **Zustand over MobX:** 2KB bundle, hook-based API, SSR-compatible, `persist` middleware for favorites
-- **SWR caching:** 10-min TTL server-side cache with stale-while-revalidate + TanStack Query client-side cache
+- **TanStack Query only:** No dedicated client state library — TanStack Query handles all server state; React useState covers local UI state
+- **SWR caching:** Next.js `fetch` revalidate for server-side + TanStack Query client-side cache
 - **WeatherAPI.com:** Single `/forecast.json` endpoint returns current weather, 3-day forecast, AND astronomy data
-- **No auth:** UUID generated client-side in localStorage for multi-user support
+- **JWT auth:** User accounts with JWT cookie-based authentication
 - **API routes as proxy:** Frontend never calls WeatherAPI directly — keeps API key server-side
 
 <!-- BEGIN:nextjs-agent-rules -->
@@ -58,7 +57,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - API routes validate input with Zod schemas
 - Database access goes through `src/lib/db.ts` (Prisma singleton)
 - Weather data fetched via `src/lib/weather-api.ts` (never call WeatherAPI directly from components)
-- State: Zustand for client state, TanStack Query for server state
+- State: TanStack Query for server state, React useState for local UI state
 
 ## Tailwind CSS Styling Rules
 

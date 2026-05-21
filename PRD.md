@@ -21,8 +21,7 @@ Build a production-ready, full-stack Weather App that enables users to search fo
 | Framework          | **Next.js** (App Router)            | Full-stack React framework with SSR, API routes, and file-based routing    |
 | Language           | **TypeScript**                      | Type safety across the entire codebase                                     |
 | Styling            | **Tailwind CSS** + **shadcn/ui**    | Utility-first CSS with accessible, composable UI primitives                |
-| State Management   | **Zustand**                         | Used for favorites with `persist` middleware; search/city selection handled via URL routing |
-| Server State       | **TanStack Query**                  | Caching, background refetch, and stale-while-revalidate for API data       |
+| State Management   | **TanStack Query** + React useState | TanStack Query for all server state; React useState for local UI state     |
 | ORM                | **Prisma**                          | Type-safe database access, declarative schema, migration file generation   |
 | Database           | **PostgreSQL 18** (Docker)          | Robust relational database for favorites and search history                |
 | Weather Provider   | **WeatherAPI.com**                  | 1 M free calls/month, single endpoint for current + forecast + astronomy   |

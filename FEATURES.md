@@ -56,7 +56,7 @@ Comprehensive checklist of all features to be implemented. Organized by category
 ## Frontend — State Management
 
 - [x] Explore necessity for separate state management library except TanStack Query
-- [ ] Explain solution in readme
+- [x] Explain solution in readme
 
 ---
 
@@ -200,7 +200,7 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ## Documentation
 
-- [ ] `README.md` — setup instructions, state management rationale, caching explanation
+- [x] `README.md` — setup instructions, state management rationale, caching explanation
 - [x] `CLAUDE.md` — AI assistant project context and instructions
 - [x] `PRD.md` — full product requirements document
 - [x] `.env.example` — environment variable template
@@ -211,4 +211,4 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 - [x] `docker-compose.yml` — PostgreSQL 18 container
 - [x] `.gitignore` — comprehensive exclusions
-- [ ] Clean git commit history with meaningful messages
+- [x] Clean git commit history with meaningful messages
