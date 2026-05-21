@@ -45,17 +45,17 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 - [x] Responsive design: mobile (320px+), tablet, desktop (2560px)
 - [x] Loading skeleton components matching content shape on all pages
-- [ ] Error boundary components on each page route
+- [x] Error boundary components (`error.tsx` + `global-error.tsx` at app root)
 - [x] Toast notifications for action success/failure (sonner)
 - [x] Keyboard-accessible interactive elements
-- [ ] Semantic HTML with ARIA labels where needed
+- [x] Semantic HTML with ARIA labels where needed
 - [x] SEO metadata via `generateMetadata` on each page
 
 ---
 
 ## Frontend — State Management
 
-- [ ] Explore necessity for separate state management library except TanStack Query
+- [x] Explore necessity for separate state management library except TanStack Query
 - [ ] Explain solution in readme
 
 ---
@@ -90,7 +90,7 @@ Comprehensive checklist of all features to be implemented. Organized by category
 - [x] `POST /api/favorites` — add favorite `{userId, cityName}`
 - [x] `DELETE /api/favorites` — remove favorite `{userId, cityName}`
 - [x] Zod input validation on all methods
-- [ ] Upsert logic to prevent duplicate favorites
+- [x] Upsert logic to prevent duplicate favorites (unique constraint + P2002 catch → 409)
 
 ### Search History
 
@@ -138,16 +138,16 @@ Comprehensive checklist of all features to be implemented. Organized by category
 - [x] In-memory `Map` with 10-minute TTL per key
 - [x] Stale-while-revalidate pattern (return stale, refresh in background)
 - [x] `isRefreshing` deduplication flag
-- [ ] Cache key format: `weather:forecast:{normalizedCity}`
+- [x] ~~Cache key format: `weather:forecast:{normalizedCity}`~~ → uses Vercel/Next.js built-in caching
 - [x] Client-side TanStack Query cache (staleTime: 10 min, gcTime: 30 min)
 
 ---
 
 ## Multi-User Support
 
-- [ ] Generate UUIDv4 on first visit, persist in localStorage as `weatherapp_user_id`
-- [ ] Include user ID in all API requests
-- [ ] Favorites and history scoped to user ID
+- [x] ~~Generate UUIDv4 on first visit~~ → JWT-based auth with user accounts
+- [x] Include user ID in all API requests (via JWT cookie, `getAuthUser`)
+- [x] Favorites and history scoped to user ID
 
 ---
 
@@ -191,24 +191,24 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ## CI/CD Pipeline
 
-- [ ] `.github/workflows/ci-cd.yml` created
-- [ ] **On push to master + PRs:** lint, typecheck (`tsc --noEmit`), test
-- [ ] **On push to master:** deploy production to Vercel
-- [ ] GitHub secrets configured: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
+- [x] `.github/workflows/ci-cd.yml` created
+- [x] **On push to master + PRs:** lint, typecheck (`tsc --noEmit`), test
+- [x] **On push to master:** deploy production to Vercel
+- [x] GitHub secrets configured: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
 
 ---
 
 ## Documentation
 
 - [ ] `README.md` — setup instructions, state management rationale, caching explanation
-- [ ] `CLAUDE.md` — AI assistant project context and instructions
-- [ ] `PRD.md` — full product requirements document
-- [ ] `.env.example` — environment variable template
+- [x] `CLAUDE.md` — AI assistant project context and instructions
+- [x] `PRD.md` — full product requirements document
+- [x] `.env.example` — environment variable template
 
 ---
 
 ## DevOps / Infrastructure
 
-- [ ] `docker-compose.yml` — PostgreSQL 18 container
-- [ ] `.gitignore` — comprehensive exclusions
+- [x] `docker-compose.yml` — PostgreSQL 18 container
+- [x] `.gitignore` — comprehensive exclusions
 - [ ] Clean git commit history with meaningful messages
