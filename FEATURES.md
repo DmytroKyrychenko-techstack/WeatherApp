@@ -172,20 +172,20 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### Unit Tests (Vitest)
 
-- [ ] `recommendations.ts` — all condition rules + edge cases
-- [ ] `timezone.ts` — parsing, conversion, formatting
-- [ ] `cache.ts` — fresh hit, stale hit, miss, deduplication
+- [x] `recommendations.ts` — all condition rules + edge cases
+- [x] `timezone.ts` — parsing, conversion, formatting
+- ~~`cache.ts`~~ — N/A (server-side caching handled by Vercel)
 
 ### Component Tests (React Testing Library)
 
-- [ ] `SearchBar` — input, debounce, autocomplete, navigation
-- [ ] `ForecastCard` — renders props, handles missing data
-- [ ] `FavoriteButton` — toggle state, API calls, toast
+- [x] `SearchBar` — input, debounce, autocomplete, navigation
+- [x] `ForecastCard` — renders props, handles missing data
+- [x] `FavoriteButton` — toggle state, API calls, toast
 
 ### API Route Tests
 
-- [ ] `/api/favorites` — CRUD operations
-- [ ] `/api/history` — record and retrieve
+- [x] `/api/favorites` — CRUD operations
+- [x] `/api/history` — record and retrieve
 
 ---
 
