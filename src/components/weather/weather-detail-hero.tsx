@@ -12,7 +12,8 @@ import {
   Zap,
   CloudRain,
 } from "lucide-react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardAction } from "@/components/ui/card";
+import { FavoriteToggle } from "@/components/weather/favorite-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { cn, resolveWeatherIcon } from "@/lib/utils";
 import {
@@ -58,6 +59,9 @@ export function WeatherDetailHero({ data }: WeatherDetailHeroProps) {
           <ArrowLeft className={styles.backIcon} />
           Back
         </Link>
+        <CardAction>
+          <FavoriteToggle cityName={location.name} />
+        </CardAction>
         <WeatherLocation
           name={location.name}
           region={location.region}
