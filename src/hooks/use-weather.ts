@@ -23,7 +23,7 @@ export function citySearchQueryOptions(term: string) {
       fetchApi<SearchResult[]>(
         `/api/search?q=${encodeURIComponent(term)}`
       ),
-    enabled: term.length >= 2,
+    enabled: term.length >= 3,
   });
 }
 

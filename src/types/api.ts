@@ -5,6 +5,13 @@ export interface FavoriteRecord {
   createdAt: string;
 }
 
+export interface SearchHistoryRecord {
+  id: string;
+  searchTerm: string;
+  userId: string;
+  timestamp: string;
+}
+
 export interface MeResponse {
   id: string;
   email: string;

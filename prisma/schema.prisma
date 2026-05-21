@@ -38,6 +38,5 @@ model SearchHistory {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([timestamp])
   @@map("search_history")
 }

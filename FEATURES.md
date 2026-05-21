@@ -28,16 +28,16 @@ Comprehensive checklist of all features to be implemented. Organized by category
 - [x] Sunrise/sunset in city's local timezone
 - [x] Sunrise/sunset converted to user's browser timezone
 - [x] Weather-based recommendation badges
-- [ ] Add/remove favorite toggle button (heart icon)
+- [x] Add/remove favorite toggle button (heart icon)
 - [x] 3-day forecast section (detailed)
 
 ### Favorites Page (`/favorites`)
 
-- [ ] Grid/list of favorite city cards
-- [ ] Each card shows city name + current weather summary (temp, condition, icon)
-- [ ] Click-through navigation to `/weather/[city]` for each card
-- [ ] Remove from favorites button on each card
-- [ ] Empty state message + CTA when no favorites saved
+- [x] Grid/list of favorite city cards
+- [x] Each card shows city name + current weather summary (temp, condition, icon)
+- [x] Click-through navigation to `/weather/[city]` for each card
+- [x] Remove from favorites button on each card
+- [x] Empty state message + CTA when no favorites saved
 
 ---
 
@@ -53,11 +53,10 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ---
 
-## Frontend — State Management (Zustand)
+## Frontend — State Management
 
-- [ ] `favorites-store.ts` — favorites list with `persist` middleware (localStorage)
-- [ ] Optimistic UI updates for favorite add/remove
-- [ ] Rollback on API failure with error toast
+- [ ] Explore necessity for separate state management library except TanStack Query
+- [ ] Explain solution in readme
 
 ---
 
@@ -66,7 +65,8 @@ Comprehensive checklist of all features to be implemented. Organized by category
 - [x] `use-geolocation.ts` — browser Geolocation API wrapper
 - [x] `use-weather.ts` — TanStack Query wrappers (cache config in `providers.tsx`)
 - [x] `use-debounce.ts` — debounce utility (300 ms)
-- [ ] `use-favorites.ts` — CRUD operations syncing Zustand + API
+- [x] `use-favorites.ts` — CRUD operations
+- [x] `use-search-history.ts` — search history with optimistic updates
 
 ---
 
@@ -86,28 +86,28 @@ Comprehensive checklist of all features to be implemented. Organized by category
 
 ### Favorites
 
-- [ ] `GET /api/favorites?userId={id}` — list user's favorites
-- [ ] `POST /api/favorites` — add favorite `{userId, cityName}`
-- [ ] `DELETE /api/favorites` — remove favorite `{userId, cityName}`
-- [ ] Zod input validation on all methods
+- [x] `GET /api/favorites?userId={id}` — list user's favorites
+- [x] `POST /api/favorites` — add favorite `{userId, cityName}`
+- [x] `DELETE /api/favorites` — remove favorite `{userId, cityName}`
+- [x] Zod input validation on all methods
 - [ ] Upsert logic to prevent duplicate favorites
 
 ### Search History
 
-- [ ] `GET /api/history?userId={id}&limit={n}` — get search history
-- [ ] `POST /api/history` — record a search `{userId, searchTerm}`
-- [ ] Zod input validation
+- [x] `GET /api/history` — get search history (max 5, newest first)
+- [x] `POST /api/history` — record a search `{searchTerm}` (auth via JWT cookie)
+- [x] Zod input validation
 
 ---
 
 ## Backend — Database (PostgreSQL + Prisma)
 
-- [ ] `favorite_cities` table with `id`, `city_name`, `user_id`, `created_at`
-- [ ] Unique constraint on `(user_id, city_name)`
-- [ ] Index on `user_id`
-- [ ] `search_history` table with `id`, `search_term`, `user_id`, `timestamp`
-- [ ] Indexes on `user_id` and `timestamp`
-- [ ] Prisma migration files generated and committed
+- [x] `favorite_cities` table with `id`, `city_name`, `user_id`, `created_at`
+- [x] Unique constraint on `(user_id, city_name)`
+- [x] Index on `user_id`
+- [x] `search_history` table with `id`, `search_term`, `user_id`, `timestamp`
+- [x] Index on `user_id` (timestamp index omitted — max 5 rows per user)
+- [x] Prisma migration files generated and committed
 - [x] Prisma client singleton (`src/lib/db.ts`)
 
 ---
@@ -192,9 +192,8 @@ Comprehensive checklist of all features to be implemented. Organized by category
 ## CI/CD Pipeline
 
 - [ ] `.github/workflows/ci-cd.yml` created
-- [ ] **On push to main + PRs:** lint, typecheck (`tsc --noEmit`), test
-- [ ] **On PRs:** deploy preview to Vercel
-- [ ] **On push to main:** deploy production to Vercel
+- [ ] **On push to master + PRs:** lint, typecheck (`tsc --noEmit`), test
+- [ ] **On push to master:** deploy production to Vercel
 - [ ] GitHub secrets configured: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`
 
 ---
@@ -202,8 +201,7 @@ Comprehensive checklist of all features to be implemented. Organized by category
 ## Documentation
 
 - [ ] `README.md` — setup instructions, state management rationale, caching explanation
-- [ ] `CLAUDE.md` — AI assistant project context
-- [ ] `AGENTS.md` — agent-specific instructions
+- [ ] `CLAUDE.md` — AI assistant project context and instructions
 - [ ] `PRD.md` — full product requirements document
 - [ ] `.env.example` — environment variable template
 
