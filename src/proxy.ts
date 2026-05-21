@@ -3,7 +3,7 @@ import { AUTH_COOKIE_NAME } from "@/lib/auth-constants";
 const protectedRoutes = ["/favorites"];
 const authRoutes = ["/login", "/register"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
 
