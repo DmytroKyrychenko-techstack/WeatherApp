@@ -28,6 +28,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: npx prisma generate
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
       - run: pnpm lint
       - run: npx tsc --noEmit
       - run: pnpm test
@@ -52,4 +54,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm dlx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - run: pnpm dlx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - run: pnpm dlx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
