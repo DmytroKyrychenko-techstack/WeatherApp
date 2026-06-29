@@ -1,9 +1,14 @@
+"use client";
+
+import { useMemo } from "react";
 import Image from "next/image";
 import { format, parseISO } from "date-fns";
 import { Droplets } from "lucide-react";
 import { resolveWeatherIcon } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTemperatureUnitContext } from "@/context/temperature-unit-context";
+import { convertTemp } from "@/lib/temperature";
 import type { ForecastDay } from "@/types/weather";
 
 interface ForecastCardProps {
@@ -29,10 +34,23 @@ const styles = {
 } as const;
 
 export function ForecastCard({ day }: ForecastCardProps) {
+  const { unit } = useTemperatureUnitContext();
   const conditionIconUrl = resolveWeatherIcon(day.day.condition.icon);
-
   const dayName = format(parseISO(day.date), "EEEE");
   const rainChance = day.day.daily_chance_of_rain;
+
+  const { maxTemp, minTemp } = useMemo(() => {
+    if (unit === "celsius") {
+      return {
+        maxTemp: Math.round(day.day.maxtemp_c),
+        minTemp: Math.round(day.day.mintemp_c),
+      };
+    }
+    return {
+      maxTemp: Math.round(convertTemp(day.day.maxtemp_c, "celsius", "fahrenheit")),
+      minTemp: Math.round(convertTemp(day.day.mintemp_c, "celsius", "fahrenheit")),
+    };
+  }, [day.day.maxtemp_c, day.day.mintemp_c, unit]);
 
   return (
     <Card className={styles.card}>
@@ -49,13 +67,9 @@ export function ForecastCard({ day }: ForecastCardProps) {
             className={styles.icon}
           />
           <div className={styles.tempRow}>
-            <span className={styles.tempHigh}>
-              {Math.round(day.day.maxtemp_c)}°
-            </span>
+            <span className={styles.tempHigh}>{maxTemp}°</span>
             <span className={styles.tempSeparator}>/</span>
-            <span className={styles.tempLow}>
-              {Math.round(day.day.mintemp_c)}°
-            </span>
+            <span className={styles.tempLow}>{minTemp}°</span>
           </div>
           <p className={styles.conditionText}>{day.day.condition.text}</p>
           {rainChance > 0 && (

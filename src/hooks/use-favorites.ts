@@ -68,6 +68,7 @@ export function useFavorites() {
 
   return {
     favorites,
+    favoriteRecords: data ?? [],
     isLoading,
     isFavorite: (cityName: string) => favorites.includes(cityName),
     addFavorite: (cityName: string) => addMutation.mutate(cityName),

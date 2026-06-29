@@ -1,9 +1,12 @@
 "use client";
 
+import { useRef, useMemo } from "react";
 import { Heart } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FavoriteCityCard } from "@/components/favorites/favorite-city-card";
+import { FavoritesSortControls } from "@/components/favorites/favorites-sort-controls";
 import { useFavorites } from "@/hooks/use-favorites";
+import { useFavoritesView } from "@/hooks/use-favorites-view";
 
 const styles = {
   root: "flex flex-col gap-6 pb-20 md:pb-0",
@@ -39,7 +42,24 @@ function FavoritesEmptyState() {
 }
 
 export default function FavoritesPage() {
-  const { favorites, isLoading, removeFavorite } = useFavorites();
+  const { favoriteRecords, isLoading, removeFavorite } = useFavorites();
+  const { state, setSortField, toggleDirection, setFilter, reset, sortAndFilter } =
+    useFavoritesView();
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const displayedFavorites = useMemo(() => {
+    const favoritesWithDate = favoriteRecords.map((record) => ({
+      name: record.cityName,
+      createdAt: new Date(record.createdAt),
+    }));
+
+    return sortAndFilter(favoritesWithDate).map((fav) => fav.name);
+  }, [favoriteRecords, sortAndFilter]);
+
+  const handleSortChange = (field: typeof state.sortField) => {
+    setSortField(field);
+    gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   if (isLoading) {
     return (
@@ -50,21 +70,36 @@ export default function FavoritesPage() {
     );
   }
 
-  if (favorites.length === 0) {
+  if (favoriteRecords.length === 0) {
     return <FavoritesEmptyState />;
   }
 
   return (
     <div className={styles.root}>
       <h1 className={styles.heading}>Favorites</h1>
-      <div className={styles.grid}>
-        {favorites.map((cityName) => (
-          <FavoriteCityCard
-            key={cityName}
-            cityName={cityName}
-            onRemove={() => removeFavorite(cityName)}
-          />
-        ))}
+      <FavoritesSortControls
+        sortField={state.sortField}
+        sortDirection={state.sortDirection}
+        filter={state.filter}
+        onSortChange={handleSortChange}
+        onDirectionToggle={toggleDirection}
+        onFilterChange={setFilter}
+        onReset={reset}
+      />
+      <div className={styles.grid} ref={gridRef}>
+        {displayedFavorites.length > 0 ? (
+          displayedFavorites.map((cityName) => (
+            <FavoriteCityCard
+              key={cityName}
+              cityName={cityName}
+              onRemove={() => removeFavorite(cityName)}
+            />
+          ))
+        ) : (
+          <div className="col-span-full text-center py-8 text-muted-foreground">
+            No cities match your filter
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
 "use client";
 
-import { useTransition } from "react";
+import { useCallback, useTransition } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Heart, LogIn, LogOut } from "lucide-react";
+import { Home, Heart, LogIn, LogOut, Thermometer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/lib/actions/auth";
+import { useTemperatureUnitContext } from "@/context/temperature-unit-context";
 
 interface NavbarProps {
   user: { id: string; email: string } | null;
@@ -34,12 +35,17 @@ const navLinks = [
 export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
+  const { unit, toggle } = useTemperatureUnitContext();
 
   function handleLogout() {
     startTransition(() => {
       logoutAction();
     });
   }
+
+  const handleToggleUnit = useCallback(() => {
+    toggle();
+  }, [toggle]);
 
   const mainLinks = navLinks.map(({ href, label, icon: Icon }) => (
     <Link
@@ -51,6 +57,18 @@ export function Navbar({ user }: NavbarProps) {
       <span className={styles.label}>{label}</span>
     </Link>
   ));
+
+  const temperatureButton = (extraClass?: string) => (
+    <button
+      onClick={handleToggleUnit}
+      aria-label={`Switch to ${unit === "celsius" ? "Fahrenheit" : "Celsius"}`}
+      title={`${unit === "celsius" ? "°C" : "°F"} - Click to toggle`}
+      className={cn(styles.logoutBtn, extraClass)}
+    >
+      <Thermometer className={styles.icon} />
+      <span className={styles.label}>{unit === "celsius" ? "°C" : "°F"}</span>
+    </button>
+  );
 
   const logoutButton = (extraClass?: string) => (
     <button
@@ -68,23 +86,27 @@ export function Navbar({ user }: NavbarProps) {
     <>
       <nav className={styles.desktop} aria-label="Main navigation">
         {mainLinks}
-        {user ? (
-          <>
-            <span className={styles.userEmail}>{user.email}</span>
-            {logoutButton()}
-          </>
-        ) : (
-          <Link
-            href="/login"
-            className={cn(styles.link, pathname === "/login" && styles.linkActive)}
-          >
-            <LogIn className={styles.icon} />
-            <span>Sign in</span>
-          </Link>
-        )}
+        <div className="ml-auto flex items-center gap-2">
+          {temperatureButton()}
+          {user ? (
+            <>
+              <span className={styles.userEmail}>{user.email}</span>
+              {logoutButton()}
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className={cn(styles.link, pathname === "/login" && styles.linkActive)}
+            >
+              <LogIn className={styles.icon} />
+              <span>Sign in</span>
+            </Link>
+          )}
+        </div>
       </nav>
       <nav className={styles.mobile} aria-label="Main navigation">
         {mainLinks}
+        {temperatureButton(styles.link)}
         {user ? (
           logoutButton(styles.link)
         ) : (

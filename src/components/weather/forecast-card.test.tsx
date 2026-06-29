@@ -1,7 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ForecastCard, ForecastGrid } from "./forecast-card";
+import { TemperatureUnitProvider } from "@/context/temperature-unit-context";
 import type { ForecastDay } from "@/types/weather";
+
+function renderWithProvider(component: React.ReactNode) {
+  return render(
+    <TemperatureUnitProvider>
+      {component}
+    </TemperatureUnitProvider>
+  );
+}
 
 function makeForecastDay(overrides: Partial<ForecastDay> = {}): ForecastDay {
   return {
@@ -44,7 +53,7 @@ function makeForecastDay(overrides: Partial<ForecastDay> = {}): ForecastDay {
 describe("ForecastCard", () => {
   it("renders day name from date", () => {
     const day = makeForecastDay({ date: "2024-06-15" }); // Saturday
-    render(<ForecastCard day={day} />);
+    renderWithProvider(<ForecastCard day={day} />);
     expect(screen.getByText("Saturday")).toBeInTheDocument();
   });
 
@@ -52,7 +61,7 @@ describe("ForecastCard", () => {
     const day = makeForecastDay();
     day.day.maxtemp_c = 28.7;
     day.day.mintemp_c = 17.3;
-    render(<ForecastCard day={day} />);
+    renderWithProvider(<ForecastCard day={day} />);
     expect(screen.getByText("29°")).toBeInTheDocument();
     expect(screen.getByText("17°")).toBeInTheDocument();
   });
@@ -60,28 +69,28 @@ describe("ForecastCard", () => {
   it("renders condition text", () => {
     const day = makeForecastDay();
     day.day.condition.text = "Partly Cloudy";
-    render(<ForecastCard day={day} />);
+    renderWithProvider(<ForecastCard day={day} />);
     expect(screen.getByText("Partly Cloudy")).toBeInTheDocument();
   });
 
   it("renders weather icon with alt text", () => {
     const day = makeForecastDay();
     day.day.condition.text = "Sunny";
-    render(<ForecastCard day={day} />);
+    renderWithProvider(<ForecastCard day={day} />);
     expect(screen.getByAltText("Sunny")).toBeInTheDocument();
   });
 
   it("shows rain badge when chance > 0", () => {
     const day = makeForecastDay();
     day.day.daily_chance_of_rain = 60;
-    render(<ForecastCard day={day} />);
+    renderWithProvider(<ForecastCard day={day} />);
     expect(screen.getByText("60% rain")).toBeInTheDocument();
   });
 
   it("does not show rain badge when chance is 0", () => {
     const day = makeForecastDay();
     day.day.daily_chance_of_rain = 0;
-    render(<ForecastCard day={day} />);
+    renderWithProvider(<ForecastCard day={day} />);
     expect(screen.queryByText(/rain/)).not.toBeInTheDocument();
   });
 });
@@ -93,7 +102,7 @@ describe("ForecastGrid", () => {
       makeForecastDay({ date: "2024-06-16" }),
       makeForecastDay({ date: "2024-06-17" }),
     ];
-    render(<ForecastGrid days={days} />);
+    renderWithProvider(<ForecastGrid days={days} />);
     expect(screen.getByText("Saturday")).toBeInTheDocument();
     expect(screen.getByText("Sunday")).toBeInTheDocument();
     expect(screen.getByText("Monday")).toBeInTheDocument();

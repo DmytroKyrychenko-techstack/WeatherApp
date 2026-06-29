@@ -6,6 +6,7 @@ import { HourlyForecast } from "@/components/weather/hourly-forecast";
 import { ForecastGrid } from "@/components/weather/forecast-card";
 import { AstronomyCard } from "@/components/weather/astronomy-card";
 import { RecommendationsCard } from "@/components/weather/recommendations-card";
+import { WeatherStatsPanel } from "@/components/weather/weather-stats-panel";
 
 type Props = {
   params: Promise<{ city: string }>;
@@ -64,6 +65,10 @@ export default async function WeatherCityPage({ params }: Props) {
       <section className={styles.section}>
         <h2 className={styles.sectionHeading}>3-Day Forecast</h2>
         <ForecastGrid days={forecast.forecastday} />
+      </section>
+
+      <section className={styles.section}>
+        <WeatherStatsPanel forecastDays={forecast.forecastday} />
       </section>
 
       <section className={styles.section}>

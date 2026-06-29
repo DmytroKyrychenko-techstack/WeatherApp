@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -7,6 +8,8 @@ import { resolveWeatherIcon } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useForecast } from "@/hooks/use-weather";
+import { useTemperatureUnitContext } from "@/context/temperature-unit-context";
+import { convertTemp } from "@/lib/temperature";
 
 interface FavoriteCityCardProps {
   cityName: string;
@@ -31,6 +34,15 @@ const styles = {
 
 export function FavoriteCityCard({ cityName, onRemove }: FavoriteCityCardProps) {
   const { data, isLoading, isError } = useForecast(cityName);
+  const { unit } = useTemperatureUnitContext();
+
+  const displayTemp = useMemo(() => {
+    if (!data) return null;
+    const temp = data.current.temp_c;
+    return unit === "celsius"
+      ? Math.round(temp)
+      : Math.round(convertTemp(temp, "celsius", "fahrenheit"));
+  }, [data, unit]);
 
   function handleRemove(e: React.MouseEvent) {
     e.preventDefault();
@@ -68,7 +80,9 @@ export function FavoriteCityCard({ cityName, onRemove }: FavoriteCityCardProps) 
           {data && (
             <>
               <p className={styles.cityName}>{data.location.name}</p>
-              <p className={styles.temp}>{Math.round(data.current.temp_c)}°C</p>
+              <p className={styles.temp}>
+                {displayTemp}°{unit === "celsius" ? "C" : "F"}
+              </p>
               <div className={styles.iconRow}>
                 <Image
                   src={resolveWeatherIcon(data.current.condition.icon)}

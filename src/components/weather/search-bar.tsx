@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useReducer, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Loader2, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,49 @@ const styles = {
     "flex items-center gap-2 px-3 py-2.5 cursor-pointer transition-colors hover:bg-muted min-h-[44px]",
   historyIcon: "size-4 text-muted-foreground shrink-0",
 } as const;
+
+interface SearchBarState {
+  inputValue: string;
+  isOpen: boolean;
+  highlightIndex: number;
+}
+
+type SearchBarAction =
+  | { type: "SET_INPUT"; value: string }
+  | { type: "OPEN_DROPDOWN" }
+  | { type: "CLOSE_DROPDOWN" }
+  | { type: "SET_HIGHLIGHT"; index: number }
+  | { type: "INCREMENT_HIGHLIGHT"; max: number }
+  | { type: "DECREMENT_HIGHLIGHT"; max: number }
+  | { type: "RESET" };
+
+function searchReducer(state: SearchBarState, action: SearchBarAction): SearchBarState {
+  switch (action.type) {
+    case "SET_INPUT":
+      return { ...state, inputValue: action.value, highlightIndex: -1 };
+    case "OPEN_DROPDOWN":
+      return { ...state, isOpen: true };
+    case "CLOSE_DROPDOWN":
+      return { ...state, isOpen: false, highlightIndex: -1 };
+    case "SET_HIGHLIGHT":
+      return { ...state, highlightIndex: action.index };
+    case "INCREMENT_HIGHLIGHT":
+      return {
+        ...state,
+        highlightIndex: state.highlightIndex < action.max - 1 ? state.highlightIndex + 1 : 0,
+      };
+    case "DECREMENT_HIGHLIGHT":
+      return {
+        ...state,
+        highlightIndex: state.highlightIndex > 0 ? state.highlightIndex - 1 : action.max - 1,
+      };
+    case "RESET":
+      return { ...state, inputValue: "", isOpen: false, highlightIndex: -1 };
+    default:
+      const _exhaustive: never = action;
+      return _exhaustive;
+  }
+}
 
 function HistoryDropdown({
   history,
@@ -97,7 +140,7 @@ function AutocompleteDropdown({
       >
         <span className={styles.cityName}>{city.name}</span>
         <span className={styles.cityRegion}>
-          {city.region}, {city.country}
+          {city.region ? `${city.region}, ${city.country}` : city.country}
         </span>
       </div>
     ));
@@ -111,50 +154,50 @@ function AutocompleteDropdown({
 }
 
 export function SearchBar() {
-  const [inputValue, setInputValue] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [highlightIndex, setHighlightIndex] = useState(-1);
+  const [state, dispatch] = useReducer(searchReducer, {
+    inputValue: "",
+    isOpen: false,
+    highlightIndex: -1,
+  });
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { history, addToHistory } = useSearchHistory(isAuthenticated);
-  const debouncedValue = useDebounce(inputValue);
+  const debouncedValue = useDebounce(state.inputValue);
   const { data: results, isLoading } = useCitySearch(debouncedValue);
 
   const isHistoryMode =
-    isOpen && inputValue.length < 3 && history.length > 0;
-  const isAutocompleteMode = isOpen && inputValue.length >= 3;
+    state.isOpen && state.inputValue.length < 3 && history.length > 0;
+  const isAutocompleteMode = state.isOpen && state.inputValue.length >= 3;
   const showDropdown = isHistoryMode || isAutocompleteMode;
   const itemCount = isHistoryMode
     ? history.length
     : (results?.length ?? 0);
 
   const closeDropdown = useCallback(() => {
-    setIsOpen(false);
-    setHighlightIndex(-1);
+    dispatch({ type: "CLOSE_DROPDOWN" });
   }, []);
 
   const selectCity = useCallback(
     (city: SearchResult) => {
       if (isAuthenticated) addToHistory(city.name);
-      setInputValue("");
-      closeDropdown();
+      dispatch({ type: "RESET" });
       inputRef.current?.blur();
       router.push(`/weather/${encodeURIComponent(city.name)}`);
     },
-    [router, isAuthenticated, addToHistory, closeDropdown]
+    [router, isAuthenticated, addToHistory]
   );
 
   const selectHistoryItem = useCallback(
     (searchTerm: string) => {
       addToHistory(searchTerm);
-      setInputValue("");
-      closeDropdown();
+      dispatch({ type: "RESET" });
       inputRef.current?.blur();
       router.push(`/weather/${encodeURIComponent(searchTerm)}`);
     },
-    [router, addToHistory, closeDropdown]
+    [router, addToHistory]
   );
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -163,23 +206,19 @@ export function SearchBar() {
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
-        setHighlightIndex((prev) =>
-          prev < itemCount - 1 ? prev + 1 : 0
-        );
+        dispatch({ type: "INCREMENT_HIGHLIGHT", max: itemCount });
         break;
       case "ArrowUp":
         e.preventDefault();
-        setHighlightIndex((prev) =>
-          prev > 0 ? prev - 1 : itemCount - 1
-        );
+        dispatch({ type: "DECREMENT_HIGHLIGHT", max: itemCount });
         break;
       case "Enter":
         e.preventDefault();
-        if (highlightIndex >= 0) {
-          if (isHistoryMode && history[highlightIndex]) {
-            selectHistoryItem(history[highlightIndex].searchTerm);
-          } else if (results?.[highlightIndex]) {
-            selectCity(results[highlightIndex]);
+        if (state.highlightIndex >= 0) {
+          if (isHistoryMode && history[state.highlightIndex]) {
+            selectHistoryItem(history[state.highlightIndex].searchTerm);
+          } else if (results?.[state.highlightIndex]) {
+            selectCity(results[state.highlightIndex]);
           }
         }
         break;
@@ -202,13 +241,12 @@ export function SearchBar() {
           ref={inputRef}
           type="text"
           placeholder="Search for a city..."
-          value={inputValue}
+          value={state.inputValue}
           onChange={(e) => {
-            setInputValue(e.target.value);
-            setIsOpen(true);
-            setHighlightIndex(-1);
+            dispatch({ type: "SET_INPUT", value: e.target.value });
+            dispatch({ type: "OPEN_DROPDOWN" });
           }}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => dispatch({ type: "OPEN_DROPDOWN" })}
           onKeyDown={handleKeyDown}
           className={styles.input}
           aria-label="Search for a city"
@@ -226,17 +264,17 @@ export function SearchBar() {
           {isHistoryMode ? (
             <HistoryDropdown
               history={history}
-              highlightIndex={highlightIndex}
+              highlightIndex={state.highlightIndex}
               onSelect={selectHistoryItem}
-              onHighlight={setHighlightIndex}
+              onHighlight={(idx) => dispatch({ type: "SET_HIGHLIGHT", index: idx })}
             />
           ) : (
             <AutocompleteDropdown
               results={results}
               isLoading={isLoading}
-              highlightIndex={highlightIndex}
+              highlightIndex={state.highlightIndex}
               onSelect={selectCity}
-              onHighlight={setHighlightIndex}
+              onHighlight={(idx) => dispatch({ type: "SET_HIGHLIGHT", index: idx })}
             />
           )}
         </div>

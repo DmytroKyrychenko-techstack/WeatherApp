@@ -1,6 +1,11 @@
+"use client";
+
+import { useMemo } from "react";
 import Image from "next/image";
 import { MapPin, type LucideIcon } from "lucide-react";
 import { CardTitle, CardDescription } from "@/components/ui/card";
+import { useTemperatureUnitContext } from "@/context/temperature-unit-context";
+import { convertTemp } from "@/lib/temperature";
 
 export type StatItem = {
   icon: LucideIcon;
@@ -65,7 +70,7 @@ export function WeatherLocation({
         </span>
       </CardTitle>
       <CardDescription>
-        {region}, {country} · {formatLocaltime(localtime)}
+        {region ? `${region}, ${country}` : country} · {formatLocaltime(localtime)}
       </CardDescription>
     </div>
   );
@@ -82,6 +87,14 @@ export function WeatherHeroRow({
   conditionText,
   tempC,
 }: WeatherHeroRowProps) {
+  const { unit } = useTemperatureUnitContext();
+
+  const displayTemp = useMemo(() => {
+    return unit === "celsius"
+      ? Math.round(tempC)
+      : Math.round(convertTemp(tempC, "celsius", "fahrenheit"));
+  }, [tempC, unit]);
+
   return (
     <div className={styles.heroRow}>
       <div className={styles.iconTempGroup}>
@@ -93,7 +106,7 @@ export function WeatherHeroRow({
           className={styles.conditionIcon}
         />
         <div className={styles.tempBlock}>
-          <p className={styles.temperature}>{Math.round(tempC)}°</p>
+          <p className={styles.temperature}>{displayTemp}°</p>
           <p className={styles.condition}>{conditionText}</p>
         </div>
       </div>

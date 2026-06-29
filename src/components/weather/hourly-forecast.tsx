@@ -1,8 +1,13 @@
+"use client";
+
+import { useMemo } from "react";
 import Image from "next/image";
 import { Droplets } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { resolveWeatherIcon } from "@/lib/utils";
+import { useTemperatureUnitContext } from "@/context/temperature-unit-context";
+import { convertTemp } from "@/lib/temperature";
 import type { HourForecast } from "@/types/weather";
 
 interface HourlyForecastProps {
@@ -28,15 +33,26 @@ export function HourlyForecast({
   hours,
   locationLocaltime,
 }: HourlyForecastProps) {
-  const currentHour = locationLocaltime.slice(0, 13); // "2024-05-20 21"
+  const { unit } = useTemperatureUnitContext();
+  const currentHour = locationLocaltime.slice(0, 13);
   const futureHours = hours.filter((h) => h.time.slice(0, 13) >= currentHour);
+
+  const displayedHours = useMemo(() => {
+    return futureHours.map((hour) => ({
+      ...hour,
+      displayTemp:
+        unit === "celsius"
+          ? Math.round(hour.temp_c)
+          : Math.round(convertTemp(hour.temp_c, "celsius", "fahrenheit")),
+    }));
+  }, [futureHours, unit]);
 
   return (
     <section className={styles.section}>
       <h2 className={styles.heading}>Today&apos;s Forecast</h2>
       <div className={styles.scrollContainer}>
         <div className={styles.innerRow}>
-          {futureHours.map((hour) => {
+          {displayedHours.map((hour) => {
             const iconUrl = resolveWeatherIcon(hour.condition.icon);
             const timeLabel = format(parseISO(hour.time), "h a");
 
@@ -51,9 +67,7 @@ export function HourlyForecast({
                     height={36}
                     className={styles.conditionIcon}
                   />
-                  <span className={styles.tempText}>
-                    {Math.round(hour.temp_c)}°
-                  </span>
+                  <span className={styles.tempText}>{hour.displayTemp}°</span>
                   {hour.chance_of_rain > 0 && (
                     <span className={styles.rainRow}>
                       <Droplets className={styles.rainIcon} />
