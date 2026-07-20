@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:integration": "node scripts/test-integration.mjs",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate"
   },
