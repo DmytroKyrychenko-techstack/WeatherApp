@@ -12,8 +12,7 @@ export default defineConfig({
     globalSetup: ["./src/integration/global-setup.ts"],
     setupFiles: ["./src/integration/setup.ts"],
     testTimeout: 30000,
-    threads: false,
-    singleThread: true,
+    isolate: false,
   },
   resolve: {
     alias: {

@@ -17,7 +17,7 @@ try {
       stdio: "inherit",
     }
   );
-} catch (error) {
+} catch {
   console.error("❌ Failed to start database container");
   process.exit(1);
 }
@@ -32,7 +32,7 @@ try {
     },
     stdio: "inherit",
   });
-} catch (error) {
+} catch {
   console.error("❌ Migrations failed");
   execSync("docker compose -f docker-compose.test.yml down -v", {
     cwd: projectRoot,
@@ -57,8 +57,8 @@ try {
       stdio: "inherit",
     }
   );
-} catch (error) {
-  testExit = error.status || 1;
+} catch (err) {
+  testExit = err.status || 1;
 }
 
 console.log("🧹 Cleaning up containers and volumes...");
@@ -67,7 +67,7 @@ try {
     cwd: projectRoot,
     stdio: "inherit",
   });
-} catch (error) {
+} catch {
   console.warn("⚠️ Failed to fully clean up containers");
 }
 
