@@ -1,7 +1,8 @@
+import * as Sentry from "@sentry/nextjs";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { getEnv } from "@/config/env";
-import { AUTH_COOKIE_NAME } from "@/lib/auth-constants";
+import { AUTH_COOKIE_NAME, SENTRY_TEST_BANNED_EMAIL } from "@/lib/auth-constants";
 
 function getSecret(): Uint8Array {
   return new TextEncoder().encode(getEnv().JWT_SECRET);
@@ -41,6 +42,15 @@ export async function getAuthUser(
   const token = decodeURIComponent(match[1]);
   const payload = await verifyToken(token);
   if (!payload) return null;
+
+  if (payload.email === SENTRY_TEST_BANNED_EMAIL) {
+    Sentry.captureException(
+      new Error("Blocked request from simulated banned user"),
+      { extra: { email: payload.email } }
+    );
+    return null;
+  }
+
   return { id: payload.sub, email: payload.email };
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 const styles = {
   body: "min-h-screen flex flex-col items-center justify-center gap-6 text-center px-4 font-sans bg-background text-foreground",
@@ -18,7 +19,7 @@ export default function GlobalError({
   unstable_retry: () => void;
 }) {
   useEffect(() => {
-    console.error(error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (
