@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getForecast } from "@/lib/weather-api";
+import { logCitySearch } from "@/lib/sentry-logging";
 import { WeatherDetailHero } from "@/components/weather/weather-detail-hero";
 import { HourlyForecast } from "@/components/weather/hourly-forecast";
 import { ForecastGrid } from "@/components/weather/forecast-card";
@@ -45,6 +46,8 @@ export default async function WeatherCityPage({ params }: Props) {
   } catch {
     notFound();
   }
+
+  logCitySearch(decodedCity);
 
   const { location, current, forecast } = data;
   const today = forecast.forecastday[0];

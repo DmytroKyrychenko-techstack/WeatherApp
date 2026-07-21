@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod/v4";
 import { getForecast } from "@/lib/weather-api";
-import { logCitySearch } from "@/lib/sentry-logging";
 
 const querySchema = z.object({
   q: z.string().min(1, "Query parameter 'q' is required"),
@@ -23,8 +22,6 @@ export async function GET(request: Request) {
   }
 
   const { q, days } = parsed.data;
-
-  logCitySearch(q, "forecast");
 
   try {
     const data = await getForecast(q, days);
